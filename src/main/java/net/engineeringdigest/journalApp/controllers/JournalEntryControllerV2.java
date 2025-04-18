@@ -4,8 +4,10 @@ package net.engineeringdigest.journalApp.controllers;
 //special type of component
 
 import net.engineeringdigest.journalApp.entity.JournalEntry;
-//import net.engineeringdigest.journalApp.repository.JournalEntryRepository;
+import net.engineeringdigest.journalApp.repository.JournalEntryRepository;
+import net.engineeringdigest.journalApp.entity.UserEntry;
 import net.engineeringdigest.journalApp.service.JournalEntryService;
+import net.engineeringdigest.journalApp.service.UserEntryService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,30 +24,42 @@ public class JournalEntryControllerV2 {
     @Autowired
     private JournalEntryService journalEntryService;
     //dependency injection
+    @Autowired
+    private UserEntryService userEntryService;
 
 //    public Map<Long, JournalEntry> journalEntries= new HashMap<>();
 
-    @GetMapping("/getAll")
-    private ResponseEntity<?> getJournalEntries(){
-
-        List<JournalEntry> entries = journalEntryService.getAll();
+    @GetMapping("{username}")
+    private ResponseEntity<?> getAllJournalEntriesOfUser(@PathVariable String username){
+        UserEntry user= userEntryService.findByUsername(username);
+        if(user==null){
+            return new ResponseEntity<>("User Not Found", HttpStatus.UNAUTHORIZED);
+        }
+        List<JournalEntry> entries = user.getJournalEntries();
         if(!entries.isEmpty()){
             return new ResponseEntity<>(entries, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("entries not found",HttpStatus.NOT_FOUND);
 
     }
 
-    @PostMapping
-    private ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry){
+    @PostMapping("/{userName}")
+    private ResponseEntity<?> createEntry(@RequestBody JournalEntry myEntry, @PathVariable String userName){
         try {
-            myEntry.setDate(LocalDateTime.now());
-            journalEntryService.saveEntry(myEntry);
+
+//            myEntry.setDate(LocalDateTime.now());
+            //added in service
+
+            journalEntryService.saveEntry(myEntry, userName);
+            //everything relating to username is in service
+
+
+
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>(e ,HttpStatus.NOT_MODIFIED);
         }
     }
 
@@ -61,21 +75,24 @@ public class JournalEntryControllerV2 {
     }
 
 
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<?> deleteEntryById(@PathVariable ObjectId id){
+    @DeleteMapping("{username}/id/{id}")
+    public ResponseEntity<?> deleteEntryById(@PathVariable ObjectId id, @PathVariable String username){
         System.out.println("Deleted" + id);
-        journalEntryService.deleteById(id);
+        journalEntryService.deleteById(id, username);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/id/{id}")
-    public ResponseEntity<JournalEntry> updateById(@PathVariable ObjectId id, @RequestBody JournalEntry myUpdate){
+    @PutMapping("/id/{userName}/{id}")
+    public ResponseEntity<JournalEntry> updateById(@PathVariable ObjectId id,
+                                                   @RequestBody JournalEntry myUpdate,
+                                                   @PathVariable String userName
+    ){
         JournalEntry oldEntry= journalEntryService.findById(id).orElse(null);
         if(oldEntry!=null) {
             oldEntry.setContent(myUpdate.getContent() != null && !myUpdate.getContent().equals("") ? myUpdate.getContent() : oldEntry.getContent());
             oldEntry.setTitle(myUpdate.getTitle() != null && !myUpdate.getTitle().equals("") ? myUpdate.getTitle() : oldEntry.getTitle());
 
-            journalEntryService.saveEntry(oldEntry);
+            journalEntryService.updateEntry(oldEntry);
             return new ResponseEntity<>(oldEntry, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND) ;
