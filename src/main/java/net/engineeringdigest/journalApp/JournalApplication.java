@@ -1,6 +1,7 @@
 package net.engineeringdigest.journalApp;
 
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableMongoRepositories(basePackages = "net.engineeringdigest.journalApp.repository")
 public class  JournalApplication {
 
-    public static void main(String[] args) {SpringApplication.run(JournalApplication.class, args);}
+    public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.load();
+        System.setProperty("DB_URI", dotenv.get("DB_URI"));
+//        System.out.println("Loaded DB_URI: " + dotenv.get("DB_URI"));
+
+        SpringApplication.run(JournalApplication.class, args);
+    }
 
     @Bean
     public PlatformTransactionManager transactionManager(MongoDatabaseFactory dbFactory){
