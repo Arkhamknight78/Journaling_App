@@ -1,0 +1,151 @@
+{
+	"info": {
+		"_postman_id": "986fbcc9-262d-4ada-9cf3-4d07ebb3fba2",
+		"name": "JournalEntry Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27912056"
+	},
+	"item": [
+		{
+			"name": "Post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \n    \"title\":\"Night \",\n    \"content\":\"SHyaam\"\n    \n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/journal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"journal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Re1",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"title\":\"shaami\"\n   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/journal/id/67f01a360637895df2b4521c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"journal",
+						"id",
+						"67f01a360637895df2b4521c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getById",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/journal/id/67efc147f7b44112d2ee255",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"journal",
+						"id",
+						"67efc147f7b44112d2ee255"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAll",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/journal/getAll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"journal",
+						"getAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Journal",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/journal/id/67f01ae3c2ff89513bdcfa1e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"journal",
+						"id",
+						"67f01ae3c2ff89513bdcfa1e"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
