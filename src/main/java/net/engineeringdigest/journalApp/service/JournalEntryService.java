@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +37,7 @@ public class JournalEntryService  {
            journalEntry.setCreatedBy(userName);
            JournalEntry savedEntry= journalEntryRepository.save(journalEntry);
            user.getJournalEntries().add(savedEntry);
-           userEntryService.saveEntry(user);
+           userEntryService.saveNewUser(user);
 //           user.setUserName(null);
            new ResponseEntity<>(HttpStatus.OK);
 //           return;
@@ -68,7 +67,7 @@ public class JournalEntryService  {
     public void deleteById(ObjectId Id, String userName){
         UserEntry user= userEntryService.findByUsername(userName);
         user.getJournalEntries().removeIf(x -> x.getId().equals(Id));
-        userEntryService.saveEntry(user);
+        userEntryService.saveNewUser(user);
         journalEntryRepository.deleteById(Id);
 
     }

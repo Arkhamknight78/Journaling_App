@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
- @RestController
+@RestController
+//special type of component
+//handles http requests
+
 @RequestMapping("/user")
 public class UserController {
 
@@ -27,7 +30,8 @@ public class UserController {
 
     @PostMapping
     public void createUser(@RequestBody UserEntry user){
-        userEntryService.saveEntry(user);
+
+        userEntryService.saveNewUser(user);
     }
 
     @PutMapping("/{userName}")
@@ -37,7 +41,7 @@ public class UserController {
         if(userInDB!= null){
             userInDB.setUserName(username.getUserName());
             userInDB.setPassword(username.getPassword());
-            userEntryService.saveEntry(userInDB);
+            userEntryService.saveNewUser(userInDB);
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
